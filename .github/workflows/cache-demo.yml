@@ -1,0 +1,34 @@
+name: Cache Demo
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Prime cache c5afdfd  # REQUIRED: Exact step name
+      id: cache-step
+      uses: actions/cache@v4  # REQUIRED: v4 or newer
+      with:
+        path: ~/.cache/pip  # Example: Python pip cache (adjust for your deps)
+        key: cache-c5afdfd  # REQUIRED: Exact key name
+        
+    - name: Show cache result  # REQUIRED: Echo hit/miss
+      run: echo "Cache hit/miss: ${{ steps.cache-step.outputs.cache-hit }}"
+      
+    - name: Set up Python  # Example for Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # This benefits from cache
+        
+    - name: Run tests
+      run: python -c "import requests; print('Dependencies cached successfully!')"
