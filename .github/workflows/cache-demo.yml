@@ -1,6 +1,8 @@
-name: Cache Demo
+name: Assignment Cache Workflow
 
-on: [push, pull_request]
+on: 
+  push:
+    branches: [ "main" ] # Runs every time you push to the main branch
 
 jobs:
   build:
@@ -10,25 +12,25 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Prime cache c5afdfd
-      id: cache-step
+    # 1. This is the exact action and version the assignment asked for
+    - name: Setup Cache
+      id: cache-step # We give this step an ID so we can talk to it later
       uses: actions/cache@v4
       with:
-        path: ~/.cache/pip
-        key: cache-c5afdfd
+        path: ~/.cache/pip # We are telling it to cache Python's downloaded packages
+        key: cache-c5afdfd # Exactly the key the assignment requested
         
-    - name: Show cache result
-      run: echo "Cache hit/miss: ${{ steps.cache-step.outputs.cache-hit }}"
+    # 2. This is the exact step name the assignment asked for
+    - name: prime-cache-c5afdfd
+      run: echo "Cache hit/miss result was - ${{ steps.cache-step.outputs.cache-hit }}"
       
+    # (Optional but good practice) Actually downloading something to put in the cache
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         
-    - name: Install dependencies
+    - name: Install a dummy dependency to cache
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        
-    - name: Run tests
-      run: python -c "import requests; print('Dependencies cached successfully!')"
+        pip install requests
