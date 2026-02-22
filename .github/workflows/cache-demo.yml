@@ -10,17 +10,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Prime cache c5afdfd  # REQUIRED: Exact step name
+    - name: Prime cache c5afdfd
       id: cache-step
-      uses: actions/cache@v4  # REQUIRED: v4 or newer
+      uses: actions/cache@v4
       with:
-        path: ~/.cache/pip  # Example: Python pip cache (adjust for your deps)
-        key: cache-c5afdfd  # REQUIRED: Exact key name
+        path: ~/.cache/pip
+        key: cache-c5afdfd
         
-    - name: Show cache result  # REQUIRED: Echo hit/miss
+    - name: Show cache result
       run: echo "Cache hit/miss: ${{ steps.cache-step.outputs.cache-hit }}"
       
-    - name: Set up Python  # Example for Python
+    - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
@@ -28,7 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt  # This benefits from cache
+        pip install -r requirements.txt
         
     - name: Run tests
       run: python -c "import requests; print('Dependencies cached successfully!')"
